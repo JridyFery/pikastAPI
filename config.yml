@@ -1,0 +1,9 @@
+database:
+  UserName:	"root"
+  Password:	""
+  DataBase:	"goWebAppTemplate"
+  Charset:	"utf8"
+  ParseTime: "True"
+
+server:
+  port: 8000

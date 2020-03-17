@@ -7,26 +7,36 @@ import (
 // User Struct
 type User struct {
 	gorm.Model
-	Name				string 				`json:"name"`
-	Email				string 				`json:"email"`
-	Password			[]byte 				`json:"password"`
-	Admin				bool 				`json:"admin"`
-	SuperAdmin			bool 				`json:"superAdmin"`
-	BirthDay 			int					`json:"birthDay"`
-	BirthMonth 			string				`json:"birthMonth"`
-	BirthYear 			int					`json:"birthYear"`
-	Country 			string				`json:"countryOfResidence"`
+	Name       string `json:"name"`
+	Email      string `json:"email"`
+	Password   []byte `json:"password"`
+	Admin      bool   `json:"admin"`
+	SuperAdmin bool   `json:"superAdmin"`
+	BirthDay   int    `json:"birthDay"`
+	BirthMonth string `json:"birthMonth"`
+	BirthYear  int    `json:"birthYear"`
+	Country    string `json:"countryOfResidence"`
 }
 
 // UserRequest Struct
 type UserRequest struct {
-	Name				string 				`json:"name"`
-	Email				string 				`json:"email"`
-	Password			string 				`json:"password"`
-	Admin				bool 				`json:"admin"`
-	SuperAdmin			bool 				`json:"superAdmin"`
-	BirthDay 			int					`json:"birthDay"`
-	BirthMonth 			string				`json:"birthMonth"`
-	BirthYear 			int					`json:"birthYear"`
-	Country 			string				`json:"countryOfResidence"`
+	Name       string `json:"name"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Admin      bool   `json:"admin"`
+	SuperAdmin bool   `json:"superAdmin"`
+	BirthDay   int    `json:"birthDay"`
+	BirthMonth string `json:"birthMonth"`
+	BirthYear  int    `json:"birthYear"`
+	Country    string `json:"countryOfResidence"`
+}
+
+// UserResponse Struct
+type UserResponse struct {
+	ID          uint     `json:"id"`
+	Name        string   `json:"name"`
+	Email       string   `json:"email"`
+	Roles       []string `json:"roles"`
+	DateOfBirth Date     `json:"dateOfBirth"`
+	Country     string   `json:"countryOfResidence"`
 }

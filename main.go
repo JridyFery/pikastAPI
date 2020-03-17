@@ -51,7 +51,7 @@ func main() {
 	}
 
 	defer db.Close()
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{})	
 
 	userRepo := repository.UserRepo{db}
 	userHandler := handlers.UserHandler{&userRepo}

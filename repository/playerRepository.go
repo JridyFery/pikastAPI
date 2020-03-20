@@ -13,6 +13,7 @@ import (
 type PlayerRepository interface {
 	CreatePlayer(u models.Player) (models.Player, error)
 	GetPlayer(id uint) (models.Player, error)
+	DeletePlayer(id uint) error
 }
 
 // PlayerRepo ...
@@ -50,4 +51,14 @@ func (r *PlayerRepo) GetPlayer(id uint) (models.Player, error) {
 //func (r *PlayerRepo) UpdatePlayer(p models.Player) (models.Player, error) {}
 
 //DeletePlayer ...
-//func (r *PlayerRepo) DeletePlayer(p models.Player) (models.Player, error) {}
+func (r *PlayerRepo) DeletePlayer(id uint) error {
+	player := models.Player{}
+	err := r.Db.First(&player, id).Error
+	if err != nil {
+		return err
+	}
+	player.ID = id
+	err = r.Db.Delete(&player).Error
+	return err
+
+}

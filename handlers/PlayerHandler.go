@@ -64,10 +64,29 @@ func (h *PlayerHandler) CreatePlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 //DeletePlayer ...
-func (h *PlayerHandler) DeletePlayer(w http.ResponseWriter, r *http.Request) {}
+func (h *PlayerHandler) DeletePlayer(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := r.URL.Query()["id"]
+	var response models.Response
+	id, err := strconv.Atoi(params[0])
+
+	if err != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR", err.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	err1 := h.Repo.DeletePlayer(uint(id))
+	if err1 != nil {
+		responseFormatter(404, "NOT FOUND", err1.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	responseFormatter(200, "OK", "USER DELETED", &response)
+	json.NewEncoder(w).Encode(response)
+}
 
 //UpdatePlayer ...
-func (h *PlayerHandler) UpdatePlayer(w http.ResponseWriter, r *http.Request) {}
+//func (h *PlayerHandler) UpdatePlayer(w http.ResponseWriter, r *http.Request) {}
 
 //GetPlayer ...
 func (h *PlayerHandler) GetPlayer(w http.ResponseWriter, r *http.Request) {
@@ -93,4 +112,4 @@ func (h *PlayerHandler) GetPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 //FindAll Players
-func (h *PlayerHandler) FindAll(w http.ResponseWriter, r *http.Request) {}
+//func (h *PlayerHandler) FindAll(w http.ResponseWriter, r *http.Request) {}

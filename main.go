@@ -10,9 +10,9 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/pikastAR/pikastAPI/config"
-	handlers "github.com/pikastAR/pikastAPI/handlers"
+	"github.com/pikastAR/pikastAPI/handlers"
 	models "github.com/pikastAR/pikastAPI/models"
-	"github.com/pikastAR/pikastAPI/repository"
+	repository "github.com/pikastAR/pikastAPI/repository"
 	router "github.com/pikastAR/pikastAPI/router"
 	"github.com/rs/cors"
 	"github.com/spf13/viper"
@@ -51,7 +51,7 @@ func main() {
 	}
 
 	defer db.Close()
-	db.AutoMigrate(&models.User{})	
+	db.AutoMigrate(&models.Pokemon{}, &models.Player{})
 
 	userRepo := repository.UserRepo{db}
 	userHandler := handlers.UserHandler{&userRepo}

@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/pikastAR/pikastAPI/helpers"
 	"net/http"
+
+	"github.com/pikastAR/pikastAPI/helpers"
+
 	//"strconv"
 	models "github.com/pikastAR/pikastAPI/models"
 	"github.com/pikastAR/pikastAPI/repository"
@@ -58,3 +60,15 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(responseWithToken)
 }
+
+//DeleteUser ...
+func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {}
+
+//UpdateUser ...
+func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {}
+
+//FindUser ...
+func (h *UserHandler) FindUser(w http.ResponseWriter, r *http.Request) {}
+
+//FindAll Players
+func (h *UserHandler) FindAll(w http.ResponseWriter, r *http.Request) {}

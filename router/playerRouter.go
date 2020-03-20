@@ -16,4 +16,5 @@ type PlayerRouterHandler struct {
 func (r *PlayerRouterHandler) HandleFunctions() {
 	// Route Handlers / Endpoints
 	r.Router.HandleFunc("/api/v1/players", r.Handler.CreatePlayer).Methods("POST")
+	r.Router.HandleFunc("/api/v1/player", r.Handler.GetPlayer).Methods("GET")
 }

@@ -6,7 +6,8 @@ import (
 
 	"github.com/pikastAR/pikastAPI/helpers"
 
-	//"strconv"
+	"strconv"
+
 	models "github.com/pikastAR/pikastAPI/models"
 	"github.com/pikastAR/pikastAPI/repository"
 	//"crypto/sha1"
@@ -68,8 +69,28 @@ func (h *PlayerHandler) DeletePlayer(w http.ResponseWriter, r *http.Request) {}
 //UpdatePlayer ...
 func (h *PlayerHandler) UpdatePlayer(w http.ResponseWriter, r *http.Request) {}
 
-//FindPlayer ...
-func (h *PlayerHandler) FindPlayer(w http.ResponseWriter, r *http.Request) {}
+//GetPlayer ...
+func (h *PlayerHandler) GetPlayer(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := r.URL.Query()["id"]
+	var response models.Response
+	id, err := strconv.Atoi(params[0])
+	if err != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR", err.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	result, err1 := h.Repo.GetPlayer(uint(id))
+	if err1 != nil {
+		responseFormatter(404, "NOT FOUND", err1.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	var player models.PlayerResponse
+	helpers.PlayerResponseFormatter(result, &player)
+	responseFormatter(200, "OK", player, &response)
+	json.NewEncoder(w).Encode(response)
+}
 
 //FindAll Players
 func (h *PlayerHandler) FindAll(w http.ResponseWriter, r *http.Request) {}

@@ -12,6 +12,7 @@ import (
 // PlayerRepository ...
 type PlayerRepository interface {
 	CreatePlayer(u models.Player) (models.Player, error)
+	GetPlayer(id uint) (models.Player, error)
 }
 
 // PlayerRepo ...
@@ -35,14 +36,18 @@ func (r *PlayerRepo) Createplayer(p models.Player) (models.Player, error) {
 	return Player, err
 }
 
-/* //Findplayer ...
-func (r *PlayerRepo) Findplayer(p models.Player) (models.Player, error) {}
+//GetPlayer ...
+func (r *PlayerRepo) GetPlayer(id uint) (models.Player, error) {
+	var Player models.Player
+	err := r.Db.First(&Player, id).Error
+	return Player, err
+}
 
-//FindAll players...
-func (r *PlayerRepo) FindAll(p models.Player) (models.Player, error) {}
+//GetAll players...
+//func (r *PlayerRepo) GetAll(p models.Player) (models.Player, error) {}
 
 //UpdatePlayer ...
-func (r *PlayerRepo) UpdatePlayer(p models.Player) (models.Player, error) {}
+//func (r *PlayerRepo) UpdatePlayer(p models.Player) (models.Player, error) {}
 
 //DeletePlayer ...
-func (r *PlayerRepo) DeletePlayer(p models.Player) (models.Player, error) {} */
+//func (r *PlayerRepo) DeletePlayer(p models.Player) (models.Player, error) {}

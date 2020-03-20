@@ -12,7 +12,7 @@ import (
 	"github.com/pikastAR/pikastAPI/config"
 	"github.com/pikastAR/pikastAPI/handlers"
 	models "github.com/pikastAR/pikastAPI/models"
-	repository "github.com/pikastAR/pikastAPI/repository"
+	"github.com/pikastAR/pikastAPI/repository"
 	router "github.com/pikastAR/pikastAPI/router"
 	"github.com/rs/cors"
 	"github.com/spf13/viper"
@@ -53,14 +53,14 @@ func main() {
 	defer db.Close()
 	db.AutoMigrate(&models.Pokemon{}, &models.Player{})
 
-	userRepo := repository.UserRepo{db}
-	userHandler := handlers.UserHandler{&userRepo}
+	playerRepo := repository.PlayerRepo{db}
+	playerHandler := handlers.PlayerHandler{playerRepo}
 	// Init Router
 	r := mux.NewRouter()
 	// serve static files
 	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/"))))
-	UserRouterHandler := router.UserRouterHandler{Router: r, Handler: userHandler}
-	UserRouterHandler.HandleFunctions()
+	PlayerRouterHandler := router.PlayerRouterHandler{Router: r, Handler: playerHandler}
+	PlayerRouterHandler.HandleFunctions()
 	// start server
 	port := ":" + strconv.Itoa(configuration.Server.Port)
 	handler := c.Handler(r)

@@ -29,7 +29,7 @@ type PlayerRequest struct {
 	PlayerName          string `json:"player_name"`
 	PlayerTel           string `json:"player_tel"`
 	PlayerEmail         string `json:"player_email"`
-	PlayerPassword      []byte `json:"password"`
+	PlayerPassword      string `json:"password"`
 	Admin               bool   `json:"admin"`
 	BirthDay            int    `json:"birthDay"`
 	BirthMonth          string `json:"birthMonth"`
@@ -44,14 +44,12 @@ type PlayerRequest struct {
 
 //PlayerResponse Struct
 type PlayerResponse struct {
+	PlayerID            uint   `json:"player_id"`
 	PlayerName          string `json:"player_name"`
 	PlayerTel           string `json:"player_tel"`
 	PlayerEmail         string `json:"player_email"`
-	PlayerPassword      []byte `json:"password"`
 	Admin               bool   `json:"admin"`
-	BirthDay            int    `json:"birthDay"`
-	BirthMonth          string `json:"birthMonth"`
-	BirthYear           int    `json:"birthYear"`
+	DateOfBirth         Date   `json:"dateofbirth"`
 	Country             string `json:"countryOfResidence"`
 	PlayerImg           string `json:"player_img"`
 	PlayerCoins         int    `json:"player_coins"`

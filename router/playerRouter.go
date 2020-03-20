@@ -6,14 +6,14 @@ import (
 	//"github.com/pikastAR/pikastAPI/helpers"
 )
 
-// UserRouterHandler ...
-type UserRouterHandler struct {
+// PlayerRouterHandler ...
+type PlayerRouterHandler struct {
 	Router  *mux.Router
-	Handler handlers.UserHandler
+	Handler handlers.PlayerHandler
 }
 
 // HandleFunctions ...
-func (r *UserRouterHandler) HandleFunctions() {
+func (r *PlayerRouterHandler) HandleFunctions() {
 	// Route Handlers / Endpoints
-	r.Router.HandleFunc("/api/v1/users", r.Handler.CreateUser).Methods("POST")
+	r.Router.HandleFunc("/api/v1/players", r.Handler.CreatePlayer).Methods("POST")
 }

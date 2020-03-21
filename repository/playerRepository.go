@@ -1,9 +1,8 @@
 package repository
 
 import (
-	//"crypto/sha1"
 	"errors"
-	//"strings"
+	"net/http"
 
 	"github.com/jinzhu/gorm"
 	models "github.com/pikastAR/pikastAPI/models"
@@ -14,6 +13,7 @@ type PlayerRepository interface {
 	CreatePlayer(u models.Player) (models.Player, error)
 	GetPlayer(id uint) (models.Player, error)
 	DeletePlayer(id uint) error
+	UpdatePlayer(w http.ResponseWriter, r *http.Request)
 }
 
 // PlayerRepo ...
@@ -47,8 +47,27 @@ func (r *PlayerRepo) GetPlayer(id uint) (models.Player, error) {
 //GetAll players...
 //func (r *PlayerRepo) GetAll(p models.Player) (models.Player, error) {}
 
+//to explain !!! fasserhouli ya 3ala ya5raaa
 //UpdatePlayer ...
-//func (r *PlayerRepo) UpdatePlayer(p models.Player) (models.Player, error) {}
+func (r *PlayerRepo) UpdatePlayer(m map[string]interface{}, id uint) error {
+	player := models.Player{}
+	err := r.Db.Where("name = ? AND id != ?", m["name"], id).Find(&player).Error
+	if err == nil {
+		return errors.New("ERROR: name already used")
+	}
+	err = r.Db.Where("email = ? AND id != ?", m["email"], id).Find(&player).Error
+	if err == nil {
+		return errors.New("ERROR: mail already used")
+	}
+	err = r.Db.First(&player, id).Error
+	if err != nil {
+		return err
+	}
+	player.ID = id
+	err1 := r.Db.Model(&player).Updates(m).Error
+	return err1
+
+}
 
 //DeletePlayer ...
 func (r *PlayerRepo) DeletePlayer(id uint) error {

@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/gorilla/mux"
 	handlers "github.com/pikastAR/pikastAPI/handlers"
-	//"github.com/pikastAR/pikastAPI/helpers"
+	"github.com/pikastAR/pikastAPI/helpers"
 )
 
 // PlayerRouterHandler ...
@@ -18,4 +18,6 @@ func (r *PlayerRouterHandler) HandleFunctions() {
 	r.Router.HandleFunc("/api/v1/players", r.Handler.CreatePlayer).Methods("POST")
 	r.Router.HandleFunc("/api/v1/player", r.Handler.GetPlayer).Methods("GET")
 	r.Router.HandleFunc("/api/v1/player", r.Handler.DeletePlayer).Methods("DELETE")
+	r.Router.Handle("/api/v1/player", helpers.IsAuthorized(r.Handler.UpdatePlayer)).Methods("PUT")
+
 }

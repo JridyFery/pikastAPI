@@ -3,6 +3,7 @@ package repository
 import (
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/jinzhu/gorm"
 	models "github.com/pikastAR/pikastAPI/models"
@@ -12,6 +13,7 @@ import (
 type PlayerRepository interface {
 	CreatePlayer(u models.Player) (models.Player, error)
 	GetPlayer(id uint) (models.Player, error)
+	GetPlayers(role string, offset int, limit int) ([]models.Player, int, error)
 	DeletePlayer(id uint) error
 	UpdatePlayer(w http.ResponseWriter, r *http.Request)
 }
@@ -44,10 +46,23 @@ func (r *PlayerRepo) GetPlayer(id uint) (models.Player, error) {
 	return Player, err
 }
 
-//GetAll players...
-//func (r *PlayerRepo) GetAll(p models.Player) (models.Player, error) {}
+// GetPlayers ...
+func (r *PlayerRepo) GetPlayers(role string, offset int, limit int) ([]models.Player, int, error) {
+	var Players []models.Player
+	var Player models.Player
+	var count int
+	var err error
+	if strings.ToUpper(role) == "USER" {
+		err = r.Db.Where("admin = ?", false).Offset(offset).Limit(limit).Find(&Players).Error
+		r.Db.Model(&Player).Where("admin = ?", false).Count(&count)
+	} else if strings.ToUpper(role) == "ADMIN" {
+		err = r.Db.Where("admin = ? ", true).Offset(offset).Limit(limit).Find(&Players).Error
+		r.Db.Model(&Player).Where("admin = ? ", true).Count(&count)
+	}
+	return Players, count, err
+}
 
-//to explain !!! fasserhouli ya 3ala ya5raaa
+
 //UpdatePlayer ...
 func (r *PlayerRepo) UpdatePlayer(m map[string]interface{}, id uint) error {
 	player := models.Player{}

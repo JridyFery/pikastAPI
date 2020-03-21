@@ -160,5 +160,45 @@ func (h *PlayerHandler) GetPlayer(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-//FindAll Players
-//func (h *PlayerHandler) FindAll(w http.ResponseWriter, r *http.Request) {}
+// GetPlayers ...
+func (h *PlayerHandler) GetPlayers(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var response models.Response
+	var responseWithCount models.ResponseWithCount
+	role := r.URL.Query()["role"][0]
+	offset, err0 := strconv.Atoi(r.URL.Query()["offset"][0])
+	if err0 != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR", err0.Error(), &response)
+		responseWithCount.Response = response
+		responseWithCount.Count = 0
+		json.NewEncoder(w).Encode(responseWithCount)
+		return
+	}
+	limit, err := strconv.Atoi(r.URL.Query()["limit"][0])
+	if err != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR", err.Error(), &response)
+		responseWithCount.Response = response
+		responseWithCount.Count = 0
+		json.NewEncoder(w).Encode(responseWithCount)
+		return
+	}
+	result, count, err1 := h.Repo.GetPlayers(role, offset, limit)
+	if err1 != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR", err1.Error(), &response)
+		responseWithCount.Response = response
+		responseWithCount.Count = 0
+		json.NewEncoder(w).Encode(responseWithCount)
+		return
+	}
+
+	var player models.PlayerResponse
+	var players []models.PlayerResponse
+	for _, res := range result {
+		helpers.PlayerResponseFormatter(res, &player)
+		players = append(players, player)
+	}
+	responseFormatter(200, "OK", players, &response)
+	responseWithCount.Response = response
+	responseWithCount.Count = count
+	json.NewEncoder(w).Encode(responseWithCount)
+}

@@ -16,5 +16,6 @@ func (r *PokemonRouterHandler) HandleFunctions() {
 	// Route Handlers / Endpoints
 	r.Router.HandleFunc("/api/v1/pokemon", r.Handler.CreatePokemon).Methods("POST")
 	r.Router.HandleFunc("/api/v1/pokemon", r.Handler.GetPokemon).Methods("GET")
+	r.Router.HandleFunc("/api/v1/pokemon", r.Handler.DeletePokemon).Methods("DELETE")
 
 }

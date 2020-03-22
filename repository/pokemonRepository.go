@@ -11,6 +11,7 @@ import (
 type PokemonRepository interface {
 	CreatePokemon(p models.Pokemon) (models.Pokemon, error)
 	GetPokemon(id uint) (models.Pokemon, error)
+	DeletePokemon(id uint) error
 	//get pok by
 	//delete pok
 	//update pok
@@ -38,4 +39,17 @@ func (r *PokemonRepo) GetPokemon(id uint) (models.Pokemon, error) {
 	var Pokemon models.Pokemon
 	err := r.Db.First(&Pokemon, id).Error
 	return Pokemon, err
+}
+
+//DeletePokemon ...
+func (r *PokemonRepo) DeletePokemon(id uint) error {
+	pokemon := models.Pokemon{}
+	err := r.Db.First(&pokemon, id).Error
+	if err != nil {
+		return err
+	}
+	pokemon.ID = id
+	err = r.Db.Delete(&pokemon).Error
+	return err
+
 }

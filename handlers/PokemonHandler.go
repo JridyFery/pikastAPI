@@ -76,3 +76,25 @@ func (h *PokemonHandler) GetPokemon(w http.ResponseWriter, r *http.Request) {
 	responseFormatter(200, "OK", pokemon, &response)
 	json.NewEncoder(w).Encode(response)
 }
+
+//DeletePokemon ...
+func (h *PokemonHandler) DeletePokemon(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := r.URL.Query()["id"]
+	var response models.Response
+	id, err := strconv.Atoi(params[0])
+
+	if err != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR", err.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	err1 := h.Repo.DeletePokemon(uint(id))
+	if err1 != nil {
+		responseFormatter(404, "NOT FOUND", err1.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	responseFormatter(200, "OK", "USER DELETED", &response)
+	json.NewEncoder(w).Encode(response)
+}

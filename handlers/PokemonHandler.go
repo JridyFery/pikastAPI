@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"strconv"
 
-	helpers "github.com/pikastAR/pikastAPI/helpers"
 	models "github.com/pikastAR/pikastAPI/models"
 	repository "github.com/pikastAR/pikastAPI/repository"
 )
@@ -56,9 +55,8 @@ func (h *PokemonHandler) GetPokemon(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	var pokemon models.PokemonResponse
-	helpers.PokemonResponseFormatter(result, &pokemon)
-	responseFormatter(200, "OK", pokemon, &response)
+
+	responseFormatter(200, "OK", result, &response)
 	json.NewEncoder(w).Encode(response)
 }
 

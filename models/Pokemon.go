@@ -20,35 +20,3 @@ type Pokemon struct {
 	Player            []*Player `gorm:"many2many:player_pokemon;"`
 }
 
-//PokemonRequest struct
-type PokemonRequest struct {
-	PokemonName       string  `json:"pokemon_name"`
-	PokemonPrefab     string  `json:"pokemon_prefab"`
-	PokemonFBX        string  `json:"pokemon_fbx"`
-	PokemonImg        string  `json:"pokemon_img"`
-	PokemonisPremium  bool    `json:"poke_ispremium"`
-	PokemonPoints     int     `json:"pokemon_points"`
-	PokemonPower      float64 `json:"pokemon_power"`
-	PokemonAttacktype string  `json:"pokemon_attack"`
-	PokemonATKSpeed   float64 `json:"pokemon_atkspeed"`
-	PokemonMOVSpeed   float64 `json:"pokemon_movspeed"`
-	PokemonHeight     float64 `json:"height"`
-	PokemonWidth      float64 `json:"width"`
-}
-
-//PokemonResponse struct
-type PokemonResponse struct {
-	PokemonID         uint    `json:"pokemon_id"`
-	PokemonName       string  `json:"pokemon_name"`
-	PokemonPrefab     string  `json:"pokemon_prefab"`
-	PokemonFBX        string  `json:"pokemon_fbx"`
-	PokemonImg        string  `json:"pokemon_img"`
-	PokemonisPremium  bool    `json:"poke_ispremium"`
-	PokemonPoints     int     `json:"pokemon_points"`
-	PokemonPower      float64 `json:"pokemon_power"`
-	PokemonAttacktype string  `json:"pokemon_attack"`
-	PokemonATKSpeed   float64 `json:"pokemon_atkspeed"`
-	PokemonMOVSpeed   float64 `json:"pokemon_movspeed"`
-	PokemonHeight     float64 `json:"height"`
-	PokemonWidth      float64 `json:"width"`
-}

@@ -117,3 +117,47 @@ func (h *PokemonHandler) GetPokemons(w http.ResponseWriter, r *http.Request) {
 	responseWithCount.Count = count
 	json.NewEncoder(w).Encode(responseWithCount)
 }
+
+//UpdatePokemon  ...
+func (h *PokemonHandler) UpdatePokemon(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	params := r.URL.Query()["id"]
+	var response models.Response
+	id, err1 := strconv.Atoi(params[0])
+	if err1 != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR", err1.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	var m map[string]interface{}
+	m = make(map[string]interface{})
+	r.ParseMultipartForm(10 << 20)
+
+	for key, value := range r.Form {
+
+		if key != "id" {
+			if value[0] == "true" {
+				m[key] = true
+			} else if value[0] == "false" {
+				m[key] = false
+			} else {
+				val, err1 := strconv.Atoi(value[0])
+				if err1 != nil {
+					m[key] = value[0]
+				} else {
+					m[key] = val
+				}
+			}
+		}
+	}
+	err2 := h.Repo.UpdatePokemon(m, uint(id))
+	if err2 != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR", err2.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	responseFormatter(200, "OK", "PLAYER UPDATED", &response)
+	json.NewEncoder(w).Encode(response)
+}

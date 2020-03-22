@@ -104,7 +104,7 @@ func (h *PlayerHandler) UpdatePlayer(w http.ResponseWriter, r *http.Request) {
 	r.ParseMultipartForm(10 << 20)
 
 	for key, value := range r.Form {
-		if key == "password" {
+		if key == "player_password" {
 			crypt := sha1.New()
 			password = value[0]
 			crypt.Write([]byte(password))
@@ -201,4 +201,32 @@ func (h *PlayerHandler) GetPlayers(w http.ResponseWriter, r *http.Request) {
 	responseWithCount.Response = response
 	responseWithCount.Count = count
 	json.NewEncoder(w).Encode(responseWithCount)
+}
+
+// GetPlayerBy ...
+func (h *PlayerHandler) GetPlayerBy(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := r.URL.Query()
+	var keys []string
+	var values []interface{}
+	var response models.Response
+	for key, value := range params {
+		keys = append(keys, key)
+		val, err := strconv.Atoi(value[0])
+		if err != nil {
+			values = append(values, value[0])
+		} else {
+			values = append(values, uint(val))
+		}
+	}
+	result, err := h.Repo.GetPlayerBy(keys, values)
+	if err != nil {
+		responseFormatter(404, "NOT FOUND", err.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	var player models.PlayerResponse
+	helpers.PlayerResponseFormatter(result, &player)
+	responseFormatter(200, "OK", player, &response)
+	json.NewEncoder(w).Encode(response)
 }

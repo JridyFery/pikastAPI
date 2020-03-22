@@ -20,4 +20,5 @@ func (r *PlayerRouterHandler) HandleFunctions() {
 	r.Router.HandleFunc("/api/v1/player", r.Handler.DeletePlayer).Methods("DELETE")
 	r.Router.Handle("/api/v1/player", helpers.IsAuthorized(r.Handler.UpdatePlayer)).Methods("PUT")
 	r.Router.Handle("/api/v1/players", helpers.IsAuthorized(r.Handler.GetPlayers)).Methods("GET")
+	r.Router.Handle("/api/v1/playerBy", helpers.IsAuthorized(r.Handler.GetPlayerBy)).Methods("GET")
 }

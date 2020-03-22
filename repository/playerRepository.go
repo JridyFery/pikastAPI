@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"crypto/sha1"
 	"errors"
 	"net/http"
 	"strings"
@@ -14,6 +15,7 @@ type PlayerRepository interface {
 	CreatePlayer(u models.Player) (models.Player, error)
 	GetPlayer(id uint) (models.Player, error)
 	GetPlayers(role string, offset int, limit int) ([]models.Player, int, error)
+	GetPlayerBy(keys []string, values []interface{}) (models.Player, error)
 	DeletePlayer(id uint) error
 	UpdatePlayer(w http.ResponseWriter, r *http.Request)
 }
@@ -62,6 +64,26 @@ func (r *PlayerRepo) GetPlayers(role string, offset int, limit int) ([]models.Pl
 	return Players, count, err
 }
 
+// GetPlayerBy ...
+func (r *PlayerRepo) GetPlayerBy(keys []string, values []interface{}) (models.Player, error) {
+	var Player models.Player
+	var m map[string]interface{}
+	var password string
+	m = make(map[string]interface{})
+
+	for index, value := range keys {
+		if value == "player_password" {
+			crypt := sha1.New()
+			password = values[index].(string)
+			crypt.Write([]byte(password))
+			m[value] = crypt.Sum(nil)
+		} else {
+			m[value] = values[index]
+		}
+	}
+	err := r.Db.Where(m).Find(&Player).Error
+	return Player, err
+}
 
 //UpdatePlayer ...
 func (r *PlayerRepo) UpdatePlayer(m map[string]interface{}, id uint) error {

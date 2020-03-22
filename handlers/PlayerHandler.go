@@ -27,6 +27,50 @@ func responseFormatter(code int, status string, data interface{}, response *mode
 	response.Data = data
 }
 
+
+
+
+// Login ...
+func (h *PlayerHandler) Login(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json")
+	params:= r.URL.Query()
+	var keys []string
+	var values []interface{}
+	var responseWithToken  models.ResponseWithToken
+	var response models.Response
+	for key,value := range params {
+		keys = append(keys,key)
+		val , err := strconv.Atoi(value[0])
+		if err != nil {
+			values = append(values, value[0])
+		}else{
+			values = append(values, uint(val))
+		}
+	}
+	result,err:= h.Repo.GetPlayerBy(keys,values)
+	if err != nil {
+		responseFormatter(404,"NOT FOUND",err.Error(),&response)
+		responseWithToken.Response=response
+		responseWithToken.Token=""
+	
+		json.NewEncoder(w).Encode(responseWithToken)
+		return
+	}
+	var player models.PlayerResponse
+	helpers.PlayerResponseFormatter(result,&player)
+	var role string
+	if player.Admin {
+		role = "admin"
+	}else{		
+		role = "player"
+	}
+	token,err:= helpers.GenerateJWT(result.PlayerName,role)
+	responseFormatter(200,"OK",player,&response)
+	responseWithToken.Response=response
+	responseWithToken.Token=token
+	json.NewEncoder(w).Encode(responseWithToken)
+}
+
 // CreatePlayer ...
 func (h *PlayerHandler) CreatePlayer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

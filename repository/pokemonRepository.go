@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/jinzhu/gorm"
 	models "github.com/pikastAR/pikastAPI/models"
@@ -11,6 +12,7 @@ import (
 type PokemonRepository interface {
 	CreatePokemon(p models.Pokemon) (models.Pokemon, error)
 	GetPokemon(id uint) (models.Pokemon, error)
+	GetPokemons(pokemonType string, offset int, limit int) ([]models.Pokemon, int, error)
 	DeletePokemon(id uint) error
 	//get pok by
 	//delete pok
@@ -26,7 +28,7 @@ type PokemonRepo struct {
 func (r *PokemonRepo) CreatePokemon(p models.Pokemon) (models.Pokemon, error) {
 	Pokemon := p
 	var pokemon models.Pokemon
-	err := r.Db.Where(map[string]interface{}{"name": p.PokemonName}).Find(&pokemon).Error
+	err := r.Db.Where(map[string]interface{}{"pokemon_name": p.PokemonName}).Find(&pokemon).Error
 	if err == nil {
 		return pokemon, errors.New("ERROR: name already used")
 	}
@@ -41,6 +43,22 @@ func (r *PokemonRepo) GetPokemon(id uint) (models.Pokemon, error) {
 	return Pokemon, err
 }
 
+// GetPokemons ...
+func (r *PokemonRepo) GetPokemons(pokemonType string, offset int, limit int) ([]models.Pokemon, int, error) {
+	var Pokemons []models.Pokemon
+	var Pokemon models.Pokemon
+	var count int
+	var err error
+	if strings.ToUpper(pokemonType) == "PREMIUM" {
+		err = r.Db.Where("pokemonis_premium= ?", true).Offset(offset).Limit(limit).Find(&Pokemons).Error
+		r.Db.Model(&Pokemon).Where("pokemonis_premium = ?", true).Count(&count)
+	} else if strings.ToUpper(pokemonType) == "FREE" {
+		err = r.Db.Where("pokemonis_premium= ?", false).Offset(offset).Limit(limit).Find(&Pokemons).Error
+		r.Db.Model(&Pokemon).Where("pokemonis_premium = ?", false).Count(&count)
+	}
+	return Pokemons, count, err
+}
+
 //DeletePokemon ...
 func (r *PokemonRepo) DeletePokemon(id uint) error {
 	pokemon := models.Pokemon{}
@@ -53,3 +71,6 @@ func (r *PokemonRepo) DeletePokemon(id uint) error {
 	return err
 
 }
+
+//GetFreePokemons func
+//GetpremiumPokemons func

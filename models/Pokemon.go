@@ -9,8 +9,8 @@ type Pokemon struct {
 	PokemonPrefab     string    `json:"pokemon_prefab"`
 	PokemonFBX        string    `json:"pokemon_fbx"`
 	PokemonImg        string    `json:"pokemon_img"`
-	PokemonisPremium  bool      `json:"poke_ispremium"`
-	PokemonPoints     int       `json:"pokemon_points"`
+	PokemonisPremium  bool      `json:"pokemonis_premium"`
+	PokemonCost       int       `json:"pokemon_cost"`
 	PokemonPower      float64   `json:"pokemon_power"`
 	PokemonAttacktype string    `json:"pokemon_attack"`
 	PokemonATKSpeed   float64   `json:"pokemon_atkspeed"`
@@ -19,4 +19,3 @@ type Pokemon struct {
 	PokemonWidth      float64   `json:"width"`
 	Player            []*Player `gorm:"many2many:player_pokemon;"`
 }
-

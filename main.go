@@ -55,12 +55,16 @@ func main() {
 
 	playerRepo := repository.PlayerRepo{db}
 	playerHandler := handlers.PlayerHandler{playerRepo}
+	pokemonRepo := repository.PokemonRepo{db}
+	pokemonHandler := handlers.PokemonHandler{pokemonRepo}
 	// Init Router
 	r := mux.NewRouter()
 	// serve static files
 	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/"))))
 	PlayerRouterHandler := router.PlayerRouterHandler{Router: r, Handler: playerHandler}
+	pokemonRouterHandler := router.PokemonRouterHandler{Router: r, Handler: pokemonHandler}
 	PlayerRouterHandler.HandleFunctions()
+	pokemonRouterHandler.HandleFunctions()
 	// start server
 	port := ":" + strconv.Itoa(configuration.Server.Port)
 	handler := c.Handler(r)

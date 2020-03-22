@@ -16,10 +16,12 @@ type PlayerRouterHandler struct {
 func (r *PlayerRouterHandler) HandleFunctions() {
 	// Route Handlers / Endpoints
 	r.Router.HandleFunc("/api/v1/players", r.Handler.CreatePlayer).Methods("POST")
-	r.Router.HandleFunc("/api/v1/player", r.Handler.GetPlayer).Methods("GET")
 	r.Router.HandleFunc("/api/v1/login", r.Handler.Login).Methods("GET")
-	r.Router.HandleFunc("/api/v1/player", r.Handler.DeletePlayer).Methods("DELETE")
-	r.Router.Handle("/api/v1/player", helpers.IsAuthorized(r.Handler.UpdatePlayer)).Methods("PUT")
+	r.Router.HandleFunc("/api/v1/player", r.Handler.GetPlayer).Methods("GET")
 	r.Router.Handle("/api/v1/players", helpers.IsAuthorized(r.Handler.GetPlayers)).Methods("GET")
 	r.Router.Handle("/api/v1/playerBy", helpers.IsAuthorized(r.Handler.GetPlayerBy)).Methods("GET")
+	r.Router.HandleFunc("/api/v1/player", r.Handler.DeletePlayer).Methods("DELETE")
+	r.Router.Handle("/api/v1/player", helpers.IsAuthorized(r.Handler.UpdatePlayer)).Methods("PUT")
+	
+	
 }

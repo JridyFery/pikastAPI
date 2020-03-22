@@ -28,8 +28,6 @@ func responseFormatter(code int, status string, data interface{}, response *mode
 }
 
 
-
-
 // Login ...
 func (h *PlayerHandler) Login(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Content-Type", "application/json")

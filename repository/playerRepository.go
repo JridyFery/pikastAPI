@@ -3,7 +3,6 @@ package repository
 import (
 	"crypto/sha1"
 	"errors"
-	"net/http"
 	"strings"
 
 	"github.com/jinzhu/gorm"
@@ -17,7 +16,8 @@ type PlayerRepository interface {
 	GetPlayers(role string, offset int, limit int) ([]models.Player, int, error)
 	GetPlayerBy(keys []string, values []interface{}) (models.Player, error)
 	DeletePlayer(id uint) error
-	UpdatePlayer(w http.ResponseWriter, r *http.Request)
+	UpdatePlayer(m map[string]interface{}, id uint) error
+	AddPokemonPlayer(idPlayer int, idPokemon int) error
 }
 
 // PlayerRepo ...
@@ -35,7 +35,7 @@ func (r *PlayerRepo) Createplayer(p models.Player) (models.Player, error) {
 	}
 	err = r.Db.Where(map[string]interface{}{"email": p.PlayerEmail}).Find(&player).Error
 	if err == nil {
-		return player, errors.New("ERROR: mail already used")
+		return player, errors.New("ERROR: email is already used")
 	}
 	err = r.Db.Create(&Player).Error
 	return Player, err
@@ -94,7 +94,7 @@ func (r *PlayerRepo) UpdatePlayer(m map[string]interface{}, id uint) error {
 	}
 	err = r.Db.Where("email = ? AND id != ?", m["email"], id).Find(&player).Error
 	if err == nil {
-		return errors.New("ERROR: mail already used")
+		return errors.New("ERROR: MAIL ALREADY USED")
 	}
 	err = r.Db.First(&player, id).Error
 	if err != nil {
@@ -117,4 +117,41 @@ func (r *PlayerRepo) DeletePlayer(id uint) error {
 	err = r.Db.Delete(&player).Error
 	return err
 
+}
+
+//AddPokemonPlayer ...
+func (r *PlayerRepo) AddPokemonPlayer(idPlayer int, idPokemon int) error {
+	PlayerPokemon := models.PlayerPokemon{}
+	PlayerPokemon.PlayerID = uint(idPlayer)
+	PlayerPokemon.PokemonID = uint(idPokemon)
+
+	//m := make(map[string]interface{})
+	err := r.Db.Where("pokemon_id = ? AND player_id = ?", idPokemon, idPlayer).Find(&PlayerPokemon).Error
+	if err == nil {
+		return errors.New("ERROR: POKEMON IS ALREADY OWNED")
+	}
+	//Supposed that we'll simply purchase pokemons using coins
+	Pokemon := models.Pokemon{}
+	Player := models.Player{}
+	//Get player with his current id
+	err = r.Db.First(&Player, idPlayer).Error
+	if err != nil {
+		return err
+	}
+	//Get pokemon with his current id
+	err = r.Db.First(&Pokemon, idPokemon).Error
+	if err != nil {
+		return err
+	}
+	err1 := r.Db.Create(&PlayerPokemon).Error
+	//Checking buying availability
+	if (Player.PlayerCoins < Pokemon.PokemonCost) && (Pokemon.PokemonisPremium) {
+		return (errors.New("NOT ENOUGH MONEY"))
+	}
+	//Substract player after buyin his new pokemon
+	//Update player coins in DB
+	r.Db.First(&Player, idPlayer)
+	Player.PlayerCoins -= Pokemon.PokemonCost
+	r.Db.Save(&Player)
+	return err1
 }

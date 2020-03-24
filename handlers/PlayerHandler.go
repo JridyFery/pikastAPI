@@ -27,45 +27,44 @@ func responseFormatter(code int, status string, data interface{}, response *mode
 	response.Data = data
 }
 
-
 // Login ...
-func (h *PlayerHandler) Login(w http.ResponseWriter, r *http.Request){
+func (h *PlayerHandler) Login(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	params:= r.URL.Query()
+	params := r.URL.Query()
 	var keys []string
 	var values []interface{}
-	var responseWithToken  models.ResponseWithToken
+	var responseWithToken models.ResponseWithToken
 	var response models.Response
-	for key,value := range params {
-		keys = append(keys,key)
-		val , err := strconv.Atoi(value[0])
+	for key, value := range params {
+		keys = append(keys, key)
+		val, err := strconv.Atoi(value[0])
 		if err != nil {
 			values = append(values, value[0])
-		}else{
+		} else {
 			values = append(values, uint(val))
 		}
 	}
-	result,err:= h.Repo.GetPlayerBy(keys,values)
+	result, err := h.Repo.GetPlayerBy(keys, values)
 	if err != nil {
-		responseFormatter(404,"NOT FOUND",err.Error(),&response)
-		responseWithToken.Response=response
-		responseWithToken.Token=""
-	
+		responseFormatter(404, "NOT FOUND", err.Error(), &response)
+		responseWithToken.Response = response
+		responseWithToken.Token = ""
+
 		json.NewEncoder(w).Encode(responseWithToken)
 		return
 	}
 	var player models.PlayerResponse
-	helpers.PlayerResponseFormatter(result,&player)
+	helpers.PlayerResponseFormatter(result, &player)
 	var role string
 	if player.Admin {
 		role = "admin"
-	}else{		
+	} else {
 		role = "player"
 	}
-	token,err:= helpers.GenerateJWT(result.PlayerName,role)
-	responseFormatter(200,"OK",player,&response)
-	responseWithToken.Response=response
-	responseWithToken.Token=token
+	token, err := helpers.GenerateJWT(result.PlayerName, role)
+	responseFormatter(200, "OK", player, &response)
+	responseWithToken.Response = response
+	responseWithToken.Token = token
 	json.NewEncoder(w).Encode(responseWithToken)
 }
 
@@ -270,5 +269,32 @@ func (h *PlayerHandler) GetPlayerBy(w http.ResponseWriter, r *http.Request) {
 	var player models.PlayerResponse
 	helpers.PlayerResponseFormatter(result, &player)
 	responseFormatter(200, "OK", player, &response)
+	json.NewEncoder(w).Encode(response)
+}
+
+//AddPokemonPlayer Association
+func (h *PlayerHandler) AddPokemonPlayer(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var response models.Response
+	idPlayer, err := strconv.Atoi(r.URL.Query()["id_player"][0])
+	if err != nil {
+		responseFormatter(400, "BAD REQUEST", err.Error(), &response)
+		return
+	}
+
+	idPokemon, err := strconv.Atoi(r.URL.Query()["id_pokemon"][0])
+	if err != nil {
+		responseFormatter(400, "BAD REQUEST", err.Error(), &response)
+		return
+	}
+
+	err1 := h.Repo.AddPokemonPlayer(idPlayer, idPokemon)
+	if err1 != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR", err1.Error(), &response)
+
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	responseFormatter(201, "CREATED", "POKEMON ADDED TO PLAYER SUCCESSEFULLY", &response)
 	json.NewEncoder(w).Encode(response)
 }

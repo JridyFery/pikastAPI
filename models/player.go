@@ -21,7 +21,13 @@ type Player struct {
 	PlayerRank          string     `json:"player_rank"`
 	PlayerLevelCount    int        `json:"player_levelCount"`
 	PlayerLevelProgress int        `json:"player_levelProgress"`
-	Pokemon             []*Pokemon `gorm:"many2many:player_pokemon;"`
+	Pokemon             []*Pokemon `gorm:"many2many:player_pokemons;"`
+}
+
+//PlayerPokemon ..
+type PlayerPokemon struct {
+	PokemonID uint `json:"PokemonID"`
+	PlayerID  uint `json:"PlayerID"`
 }
 
 // PlayerRequest Struct

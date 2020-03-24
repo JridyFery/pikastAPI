@@ -17,5 +17,5 @@ type Pokemon struct {
 	PokemonMOVSpeed   float64   `json:"pokemon_movspeed"`
 	PokemonHeight     float64   `json:"height"`
 	PokemonWidth      float64   `json:"width"`
-	Player            []*Player `gorm:"many2many:player_pokemon;"`
+	Player            []*Player `gorm:"many2many:player_pokemons;"`
 }

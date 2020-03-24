@@ -298,3 +298,25 @@ func (h *PlayerHandler) AddPokemonPlayer(w http.ResponseWriter, r *http.Request)
 	responseFormatter(201, "CREATED", "POKEMON ADDED TO PLAYER SUCCESSEFULLY", &response)
 	json.NewEncoder(w).Encode(response)
 }
+
+//GetPlayerPokemons Association
+func (h *PlayerHandler) GetPlayerPokemons(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var response models.Response
+	var responsewithcount models.ResponseWithCount
+	idPlayer, err := strconv.Atoi(r.URL.Query()["id_player"][0])
+	if err != nil {
+		responseFormatter(400, "BAD REQUEST", err.Error(), &response)
+		return
+	}
+	result, count, err := h.Repo.GetplayerPokemons(uint(idPlayer))
+	if err != nil {
+		responseFormatter(404, "NOT FOUND", err.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	responseFormatter(200, "OK", result, &response)
+	responsewithcount.Response = response
+	responsewithcount.Count = count
+	json.NewEncoder(w).Encode(responsewithcount)
+}

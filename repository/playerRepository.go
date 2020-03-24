@@ -18,6 +18,7 @@ type PlayerRepository interface {
 	DeletePlayer(id uint) error
 	UpdatePlayer(m map[string]interface{}, id uint) error
 	AddPokemonPlayer(idPlayer int, idPokemon int) error
+	GetplayerPokemons(playerID uint) ([]models.Pokemon, int, error)
 }
 
 // PlayerRepo ...
@@ -148,10 +149,20 @@ func (r *PlayerRepo) AddPokemonPlayer(idPlayer int, idPokemon int) error {
 	if (Player.PlayerCoins < Pokemon.PokemonCost) && (Pokemon.PokemonisPremium) {
 		return (errors.New("NOT ENOUGH MONEY"))
 	}
-	//Substract player after buyin his new pokemon
 	//Update player coins in DB
-	r.Db.First(&Player, idPlayer)
 	Player.PlayerCoins -= Pokemon.PokemonCost
 	r.Db.Save(&Player)
 	return err1
+}
+
+//GetplayerPokemons func
+func (r *PlayerRepo) GetplayerPokemons(playerID uint) ([]models.Pokemon, int, error) {
+	var Pokemons []models.Pokemon
+	Player := models.Player{}
+	Player.ID = playerID
+	var count int
+	var err error
+	err = r.Db.Model(&Player).Related(&Pokemons, "Pokemon").Error
+	count = len(Pokemons)
+	return Pokemons, count, err
 }

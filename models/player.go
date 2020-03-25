@@ -18,6 +18,7 @@ type Player struct {
 	Country             string     `json:"countryOfResidence"`
 	PlayerImg           string     `json:"player_img"`
 	PlayerCoins         int        `json:"player_coins"`
+	PlayerDiamonds      int        `json:"player_diamonds"`
 	PlayerRank          string     `json:"player_rank"`
 	PlayerLevelCount    int        `json:"player_levelCount"`
 	PlayerLevelProgress int        `json:"player_levelProgress"`

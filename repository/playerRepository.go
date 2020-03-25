@@ -145,13 +145,24 @@ func (r *PlayerRepo) AddPokemonPlayer(idPlayer int, idPokemon int) error {
 		return err
 	}
 	err1 := r.Db.Create(&PlayerPokemon).Error
-	//Checking buying availability
-	if (Player.PlayerCoins < Pokemon.PokemonCost) && (Pokemon.PokemonisPremium) {
-		return (errors.New("NOT ENOUGH MONEY"))
+	//Checking buying Method
+	if Pokemon.PokemonisPremium {
+		if Pokemon.WithDiamonds {
+			//Checking buying possibility
+			if Player.PlayerDiamonds < Pokemon.PokemonCost {
+				return (errors.New("NOT ENOUGH DIAMONDS"))
+			}
+			//Update player coins in DB
+			Player.PlayerDiamonds -= Pokemon.PokemonCost
+		} else {
+			if Player.PlayerCoins < Pokemon.PokemonCost {
+				return (errors.New("NOT ENOUGH MONEY"))
+			}
+			//Update player coins in DB
+			Player.PlayerCoins -= Pokemon.PokemonCost
+		}
+		r.Db.Save(&Player)
 	}
-	//Update player coins in DB
-	Player.PlayerCoins -= Pokemon.PokemonCost
-	r.Db.Save(&Player)
 	return err1
 }
 

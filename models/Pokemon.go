@@ -11,6 +11,7 @@ type Pokemon struct {
 	PokemonImg        string    `json:"pokemon_img"`
 	PokemonisPremium  bool      `json:"pokemonis_premium"`
 	PokemonCost       int       `json:"pokemon_cost"`
+	WithDiamonds      bool      `json:"with_diamonds"`
 	PokemonPower      float64   `json:"pokemon_power"`
 	PokemonAttacktype string    `json:"pokemon_attack"`
 	PokemonATKSpeed   float64   `json:"pokemon_atkspeed"`

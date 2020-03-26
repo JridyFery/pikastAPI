@@ -17,6 +17,7 @@ type PlayerRepository interface {
 	GetPlayerBy(keys []string, values []interface{}) (models.Player, error)
 	DeletePlayer(id uint) error
 	UpdatePlayer(m map[string]interface{}, id uint) error
+	UpdatePlayerPic(img string, id uint) error
 	AddPokemonPlayer(idPlayer int, idPokemon int) error
 	GetplayerPokemons(playerID uint) ([]models.Pokemon, int, error)
 }
@@ -105,6 +106,20 @@ func (r *PlayerRepo) UpdatePlayer(m map[string]interface{}, id uint) error {
 	err1 := r.Db.Model(&player).Updates(m).Error
 	return err1
 
+}
+
+//UpdatePlayerPic function
+func (r *PlayerRepo) UpdatePlayerPic(img string, id uint) error {
+	Player := models.Player{}
+	m := make(map[string]interface{})
+	err := r.Db.First(&Player, id).Error
+	if err != nil {
+		return err
+	}
+	m["player_img"] = img
+	Player.ID = id
+	err = r.Db.Model(&Player).Update(m).Error
+	return err
 }
 
 //DeletePlayer ...

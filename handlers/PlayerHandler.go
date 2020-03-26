@@ -3,11 +3,12 @@ package handlers
 import (
 	"crypto/sha1"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/pikastAR/pikastAPI/helpers"
-
-	"strconv"
 
 	models "github.com/pikastAR/pikastAPI/models"
 	"github.com/pikastAR/pikastAPI/repository"
@@ -130,7 +131,6 @@ func (h *PlayerHandler) DeletePlayer(w http.ResponseWriter, r *http.Request) {
 //UpdatePlayer ...
 func (h *PlayerHandler) UpdatePlayer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
 	params := r.URL.Query()["id"]
 	var response models.Response
 	id, err1 := strconv.Atoi(params[0])
@@ -198,6 +198,55 @@ func (h *PlayerHandler) GetPlayer(w http.ResponseWriter, r *http.Request) {
 	var player models.PlayerResponse
 	helpers.PlayerResponseFormatter(result, &player)
 	responseFormatter(200, "OK", player, &response)
+	json.NewEncoder(w).Encode(response)
+}
+
+//UpdatePlayerPic func
+func (h *PlayerHandler) UpdatePlayerPic(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var response models.Response
+	dt := time.Now().UnixNano()
+	playerID, err0 := strconv.Atoi(r.URL.Query()["id"][0])
+	if err0 != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR 3", err0.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	r.ParseMultipartForm(10 << 20)
+	//upload picture
+	file, handler, err := r.FormFile("player_img")
+	var fileType string
+	if err != nil {
+		responseFormatter(400, "BAD REQUEST", err.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	defer file.Close()
+	fileType = handler.Header["Content-Type"][0]
+	fileType = fileType[6:]
+	pictureFile, err3 := ioutil.TempFile("assets/pictures", "pic_*_"+strconv.Itoa(int(dt))+"."+fileType)
+	if err3 != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR 1", err3.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	defer pictureFile.Close()
+	fileBytes, err4 := ioutil.ReadAll(file)
+	if err4 != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR 2", err4.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	pictureFile.Write(fileBytes)
+	pictureName := pictureFile.Name()[16:]
+	err3 = h.Repo.UpdatePlayerPic(pictureName, uint(playerID))
+	if err3 != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR 4", err3.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	responseFormatter(200, "OK", "PICTURE UPDATED", &response)
 	json.NewEncoder(w).Encode(response)
 }
 

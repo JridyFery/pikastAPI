@@ -36,6 +36,7 @@ func (h *PlayerHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var values []interface{}
 	var responseWithToken models.ResponseWithToken
 	var response models.Response
+	count := 0
 	for key, value := range params {
 		keys = append(keys, key)
 		val, err := strconv.Atoi(value[0])
@@ -44,13 +45,20 @@ func (h *PlayerHandler) Login(w http.ResponseWriter, r *http.Request) {
 		} else {
 			values = append(values, uint(val))
 		}
+		count++
 	}
 	result, err := h.Repo.GetPlayerBy(keys, values)
 	if err != nil {
 		responseFormatter(404, "NOT FOUND", err.Error(), &response)
 		responseWithToken.Response = response
 		responseWithToken.Token = ""
-
+		json.NewEncoder(w).Encode(responseWithToken)
+		return
+	}
+	if count < 2 {
+		responseFormatter(404, "NOT FOUND", err.Error(), &response)
+		responseWithToken.Response = response
+		responseWithToken.Token = ""
 		json.NewEncoder(w).Encode(responseWithToken)
 		return
 	}

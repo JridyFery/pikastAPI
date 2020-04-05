@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"bytes"
 	"crypto/sha1"
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -34,7 +37,7 @@ func (h *PlayerHandler) Login(w http.ResponseWriter, r *http.Request) {
 	params := r.URL.Query()
 	var keys []string
 	var values []interface{}
-	var responseWithToken models.ResponseWithToken
+	var responseWithToken models.ResponseWithTokenAndImage
 	var response models.Response
 	count := 0
 	for key, value := range params {
@@ -47,21 +50,34 @@ func (h *PlayerHandler) Login(w http.ResponseWriter, r *http.Request) {
 		}
 		count++
 	}
+	if count < 2 {
+		responseFormatter(400, "BAD REQUEST", "Not Enough arguments", &response)
+		responseWithToken.Response = response
+		responseWithToken.Token = ""
+		responseWithToken.Picture = nil
+		json.NewEncoder(w).Encode(responseWithToken)
+		return
+	}
 	result, err := h.Repo.GetPlayerBy(keys, values)
 	if err != nil {
 		responseFormatter(404, "NOT FOUND", err.Error(), &response)
 		responseWithToken.Response = response
 		responseWithToken.Token = ""
+		responseWithToken.Picture = nil
 		json.NewEncoder(w).Encode(responseWithToken)
 		return
 	}
-	if count < 2 {
-		responseFormatter(404, "NOT FOUND", err.Error(), &response)
+	file, err := os.Open("assets/pictures/" + result.PlayerImg)
+	if err != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR", err.Error(), &response)
 		responseWithToken.Response = response
 		responseWithToken.Token = ""
+
 		json.NewEncoder(w).Encode(responseWithToken)
 		return
 	}
+	buf := bytes.NewBuffer(nil)
+	io.Copy(buf, file)
 	var player models.PlayerResponse
 	helpers.PlayerResponseFormatter(result, &player)
 	var role string
@@ -74,6 +90,7 @@ func (h *PlayerHandler) Login(w http.ResponseWriter, r *http.Request) {
 	responseFormatter(200, "OK", player, &response)
 	responseWithToken.Response = response
 	responseWithToken.Token = token
+	responseWithToken.Picture = buf.Bytes()
 	json.NewEncoder(w).Encode(responseWithToken)
 }
 
@@ -222,17 +239,15 @@ func (h *PlayerHandler) UpdatePlayerPic(w http.ResponseWriter, r *http.Request) 
 	}
 	r.ParseMultipartForm(10 << 20)
 	//upload picture
-	file, handler, err := r.FormFile("player_img")
-	var fileType string
+	file, _, err := r.FormFile("player_img")
 	if err != nil {
 		responseFormatter(400, "BAD REQUEST", err.Error(), &response)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 	defer file.Close()
-	fileType = handler.Header["Content-Type"][0]
-	fileType = fileType[6:]
-	pictureFile, err3 := ioutil.TempFile("assets/pictures", "pic_*_"+strconv.Itoa(int(dt))+"."+fileType)
+
+	pictureFile, err3 := ioutil.TempFile("assets/pictures", "pic_*_"+strconv.Itoa(int(dt))+".png")
 	if err3 != nil {
 		responseFormatter(500, "INTERNAL SERVER ERROR 1", err3.Error(), &response)
 		json.NewEncoder(w).Encode(response)

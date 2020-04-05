@@ -1,7 +1,5 @@
 package models
 
-import "mime/multipart"
-
 // Response Struct
 type Response struct {
 	Code   int         `json:"code"`
@@ -11,9 +9,8 @@ type Response struct {
 
 // ResponseWithToken struct
 type ResponseWithToken struct {
-	Response Response       `json:"response"`
-	Token    string         `json:"token"`
-	Picture  multipart.File `json:"picture"`
+	Response Response `json:"response"`
+	Token    string   `json:"token"`
 }
 
 // ResponseWithCount struct
@@ -27,4 +24,11 @@ type Date struct {
 	Day   int    `json:"day"`
 	Month string `json:"month"`
 	Year  int    `json:"year"`
+}
+
+//ResponseWithTokenAndImage ...
+type ResponseWithTokenAndImage struct {
+	Response Response `json:"response"`
+	Token    string   `json:"token"`
+	Picture  []byte   `json:"picture"`
 }

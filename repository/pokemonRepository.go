@@ -13,10 +13,8 @@ type PokemonRepository interface {
 	CreatePokemon(p models.Pokemon) (models.Pokemon, error)
 	GetPokemon(id uint) (models.Pokemon, error)
 	GetPokemons(pokemonType string, offset int, limit int) ([]models.Pokemon, int, error)
+	UpdatePokemon(m map[string]interface{}, id uint) error
 	DeletePokemon(id uint) error
-	//get pok by
-	//delete pok
-	//update pok
 }
 
 //PokemonRepo ...

@@ -49,6 +49,11 @@ type PlayerRequest struct {
 	PlayerLevelProgress int    `json:"player_levelProgress"`
 }
 
+//PlayerRequestImage ...
+type PlayerRequestImage struct {
+	PlayerImg []byte `json:"player_img"`
+}
+
 //PlayerResponse Struct
 type PlayerResponse struct {
 	PlayerID            uint   `json:"player_id"`

@@ -6,4 +6,4 @@ database:
   ParseTime: "True"
 
 server:
-  port: 8000
+  port: 20000

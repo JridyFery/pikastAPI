@@ -21,7 +21,6 @@ func (r *PlayerRouterHandler) HandleFunctions() {
 	r.Router.Handle("/api/v1/players", helpers.IsAuthorized(r.Handler.GetPlayers)).Methods("GET")
 	r.Router.Handle("/api/v1/playerpokemon", helpers.IsAuthorized(r.Handler.AddPokemonPlayer)).Methods("POST")
 	r.Router.Handle("/api/v1/playerpokemons", helpers.IsAuthorized(r.Handler.GetPlayerPokemons)).Methods("GET")
-
 	r.Router.Handle("/api/v1/playerby", helpers.IsAuthorized(r.Handler.GetPlayerBy)).Methods("GET")
 	r.Router.Handle("/api/v1/player", helpers.IsAuthorized(r.Handler.DeletePlayer)).Methods("DELETE")
 	r.Router.Handle("/api/v1/player", helpers.IsAuthorized(r.Handler.UpdatePlayer)).Methods("PUT")

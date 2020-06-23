@@ -4,14 +4,13 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"encoding/json"
+	"github.com/pikastAR/pikastAPI/helpers"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
-
-	"github.com/pikastAR/pikastAPI/helpers"
 
 	models "github.com/pikastAR/pikastAPI/models"
 	"github.com/pikastAR/pikastAPI/repository"
@@ -228,8 +227,9 @@ func (h *PlayerHandler) GetPlayer(w http.ResponseWriter, r *http.Request) {
 
 //UpdatePlayerPic func
 func (h *PlayerHandler) UpdatePlayerPic(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json ")
 	var response models.Response
+	var requestImage models.PlayerRequestImage
 	dt := time.Now().UnixNano()
 	playerID, err0 := strconv.Atoi(r.URL.Query()["id"][0])
 	if err0 != nil {
@@ -237,15 +237,18 @@ func (h *PlayerHandler) UpdatePlayerPic(w http.ResponseWriter, r *http.Request) 
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	r.ParseMultipartForm(10 << 20)
-	//upload picture
-	file, _, err := r.FormFile("player_img")
+	err := json.NewDecoder(r.Body).Decode(&requestImage)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	if err != nil {
 		responseFormatter(400, "BAD REQUEST", err.Error(), &response)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	defer file.Close()
+	//defer file.Close()
 
 	pictureFile, err3 := ioutil.TempFile("assets/pictures", "pic_*_"+strconv.Itoa(int(dt))+".png")
 	if err3 != nil {
@@ -254,13 +257,8 @@ func (h *PlayerHandler) UpdatePlayerPic(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	defer pictureFile.Close()
-	fileBytes, err4 := ioutil.ReadAll(file)
-	if err4 != nil {
-		responseFormatter(500, "INTERNAL SERVER ERROR 2", err4.Error(), &response)
-		json.NewEncoder(w).Encode(response)
-		return
-	}
-	pictureFile.Write(fileBytes)
+
+	pictureFile.Write(requestImage.PlayerImg)
 	pictureName := pictureFile.Name()[16:]
 	err3 = h.Repo.UpdatePlayerPic(pictureName, uint(playerID))
 	if err3 != nil {

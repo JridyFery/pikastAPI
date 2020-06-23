@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"encoding/json"
-	"github.com/pikastAR/pikastAPI/helpers"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/pikastAR/pikastAPI/helpers"
 
 	models "github.com/pikastAR/pikastAPI/models"
 	"github.com/pikastAR/pikastAPI/repository"
@@ -231,12 +232,7 @@ func (h *PlayerHandler) UpdatePlayerPic(w http.ResponseWriter, r *http.Request) 
 	var response models.Response
 	var requestImage models.PlayerRequestImage
 	dt := time.Now().UnixNano()
-	playerID, err0 := strconv.Atoi(r.URL.Query()["id"][0])
-	if err0 != nil {
-		responseFormatter(500, "INTERNAL SERVER ERROR 3", err0.Error(), &response)
-		json.NewEncoder(w).Encode(response)
-		return
-	}
+
 	err := json.NewDecoder(r.Body).Decode(&requestImage)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -260,7 +256,7 @@ func (h *PlayerHandler) UpdatePlayerPic(w http.ResponseWriter, r *http.Request) 
 
 	pictureFile.Write(requestImage.PlayerImg)
 	pictureName := pictureFile.Name()[16:]
-	err3 = h.Repo.UpdatePlayerPic(pictureName, uint(playerID))
+	err3 = h.Repo.UpdatePlayerPic(pictureName, uint(requestImage.PlayerId))
 	if err3 != nil {
 		responseFormatter(500, "INTERNAL SERVER ERROR 4", err3.Error(), &response)
 		json.NewEncoder(w).Encode(response)

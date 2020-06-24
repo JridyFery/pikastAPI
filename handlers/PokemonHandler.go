@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"strconv"
 
-	models "github.com/pikastAR/pikastAPI/models"
-	repository "github.com/pikastAR/pikastAPI/repository"
+	models "github.com/JridyFery/pikastAPI/models"
+	repository "github.com/JridyFery/pikastAPI/repository"
 )
 
 // PokemonHandler ...

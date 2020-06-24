@@ -11,10 +11,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/pikastAR/pikastAPI/helpers"
+	"github.com/JridyFery/pikastAPI/helpers"
 
-	models "github.com/pikastAR/pikastAPI/models"
-	"github.com/pikastAR/pikastAPI/repository"
+	models "github.com/JridyFery/pikastAPI/models"
+	"github.com/JridyFery/pikastAPI/repository"
 	//"crypto/sha1"
 	//"gopkg.in/gomail.v2"
 	//"github.com/sethvargo/go-password/password"

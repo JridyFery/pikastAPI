@@ -2,8 +2,8 @@ package router
 
 import (
 	"github.com/gorilla/mux"
-	handlers "github.com/pikastAR/pikastAPI/handlers"
-	"github.com/pikastAR/pikastAPI/helpers"
+	handlers "github.com/JridyFery/pikastAPI/handlers"
+	"github.com/JridyFery/pikastAPI/helpers"
 )
 
 // PlayerRouterHandler ...

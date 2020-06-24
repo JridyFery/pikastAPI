@@ -3,4 +3,4 @@ build:
     - go
 
 run:
-  web: go build ./main.go && ./main
+  web: pikastAPI

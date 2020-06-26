@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/jinzhu/gorm"
-	models "github.com/pikastAR/pikastAPI/models"
+	models "github.com/JridyFery/pikastAPI/models"
 )
 
 //PokemonRepository ...

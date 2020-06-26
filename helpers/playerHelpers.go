@@ -3,7 +3,7 @@ package helpers
 import (
 	"crypto/sha1"
 
-	models "github.com/pikastAR/pikastAPI/models"
+	models "github.com/JridyFery/pikastAPI/models"
 )
 
 // PlayerResponseFormatter func

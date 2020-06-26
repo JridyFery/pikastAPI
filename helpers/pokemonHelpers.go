@@ -1,3 +1,3 @@
 package helpers
 
-//import "github.com/pikastAR/pikastAPI/models"
+//import "github.com/JridyFery/pikastAPI/models"

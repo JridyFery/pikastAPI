@@ -232,7 +232,6 @@ func (h *PlayerHandler) UpdatePlayerPic(w http.ResponseWriter, r *http.Request) 
 	var response models.Response
 	var requestImage models.PlayerRequestImage
 	dt := time.Now().UnixNano()
-
 	err := json.NewDecoder(r.Body).Decode(&requestImage)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -245,7 +244,6 @@ func (h *PlayerHandler) UpdatePlayerPic(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	//defer file.Close()
-
 	pictureFile, err3 := ioutil.TempFile("assets/pictures", "pic_*_"+strconv.Itoa(int(dt))+".png")
 	if err3 != nil {
 		responseFormatter(500, "INTERNAL SERVER ERROR 1", err3.Error(), &response)
@@ -256,13 +254,12 @@ func (h *PlayerHandler) UpdatePlayerPic(w http.ResponseWriter, r *http.Request) 
 
 	pictureFile.Write(requestImage.PlayerImg)
 	pictureName := pictureFile.Name()[16:]
-	err3 = h.Repo.UpdatePlayerPic(pictureName, uint(requestImage.PlayerId))
+	err3 = h.Repo.UpdatePlayerPic(pictureName, uint(requestImage.PlayerID))
 	if err3 != nil {
 		responseFormatter(500, "INTERNAL SERVER ERROR 4", err3.Error(), &response)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-
 	responseFormatter(200, "OK", "PICTURE UPDATED", &response)
 	json.NewEncoder(w).Encode(response)
 }

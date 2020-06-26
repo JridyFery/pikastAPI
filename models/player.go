@@ -51,7 +51,7 @@ type PlayerRequest struct {
 
 //PlayerRequestImage ...
 type PlayerRequestImage struct {
-	PlayerId  int    `json:"PlayerID"`
+	PlayerID  int    `json:"PlayerID"`
 	PlayerImg []byte `json:"player_img"`
 }
 

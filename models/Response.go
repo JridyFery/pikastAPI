@@ -15,8 +15,8 @@ type ResponseWithToken struct {
 
 // ResponseWithCount struct
 type ResponseWithCount struct {
-	Response Response `json:"response"`
 	Count    int      `json:"count"`
+	Response Response `json:"response"`
 }
 
 // Date Struct

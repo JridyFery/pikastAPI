@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/JridyFery/pikastAPI/models"
+	"os"
 )
 
 // PokemonResponseFormatter func
@@ -23,30 +24,20 @@ func PokemonResponseFormatter(result models.Pokemon, pokemon *models.PokemonResp
 	pokemon.PokemonHeight = result.PokemonHeight
 	pokemon.PokemonWidth = result.PokemonWidth
 
-	pokemonPicture, err := os.Open("assets/pokemons/" + result.PokemonImg) // For read access.
+	pokemonPicture, err := os.Open("assets/pictures/pokemons/" + result.PokemonImg) // For read access.
 	if err != nil {
 		return err
 	}
 
 	defer pokemonPicture.Close()
 
-	reader := bufio.NewReader(pokemonPicture)
-	buffer := bytes.NewBuffer(make([]byte, 0))
+	fileInfo, _ := pokemonPicture.Stat()
+	var size int64 = fileInfo.Size()
+	bytes := make([]byte, size)
 
-	var chunk []byte
-	var eol bool
-
-	for {
-		if chunk, eol, err = reader.ReadLine(); err != nil {
-			break
-		}
-		buffer.Write(chunk)
-		if !eol {
-			buffer.Reset()
-		}
-	}
-
-	pokemon.PokemonImg = chunk
-
+	// read file into bytes
+	buffer := bufio.NewReader(pokemonPicture)
+	_, err = buffer.Read(bytes)
+	pokemon.PokemonImg=bytes
 	return nil
 }

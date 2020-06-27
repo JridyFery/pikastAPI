@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"net/http"
-
 	"encoding/json"
 	"strconv"
 
+	"github.com/JridyFery/pikastAPI/helpers"
 	models "github.com/JridyFery/pikastAPI/models"
 	repository "github.com/JridyFery/pikastAPI/repository"
 )
@@ -85,6 +85,8 @@ func (h *PokemonHandler) DeletePokemon(w http.ResponseWriter, r *http.Request) {
 //GetPokemons func
 func (h *PokemonHandler) GetPokemons(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	var pokemonResponse models.PokemonResponse
+	var pokemonResponses []models.PokemonResponse
 	var response models.Response
 	var responseWithCount models.ResponseWithCount
 	pokemonType := r.URL.Query()["pokemonType"][0]
@@ -112,7 +114,11 @@ func (h *PokemonHandler) GetPokemons(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(responseWithCount)
 		return
 	}
-	responseFormatter(200, "OK", result, &response)
+	for _, pok := range result {
+		helpers.PokemonResponseFormatter(pok,&pokemonResponse)
+		pokemonResponses = append(pokemonResponses,pokemonResponse)
+	}
+	responseFormatter(200, "OK", pokemonResponses, &response)
 	responseWithCount.Response = response
 	responseWithCount.Count = count
 	json.NewEncoder(w).Encode(responseWithCount)

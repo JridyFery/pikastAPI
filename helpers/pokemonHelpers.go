@@ -2,17 +2,17 @@ package helpers
 
 import (
 	"bufio"
-	"bytes"
+	//"bytes"
 	"os"
 
 	"github.com/JridyFery/pikastAPI/models"
 //	"github.com/jinzhu/gorm"
 	//"encoding/hex"
-	"os"
+	//"os"
 )
 
 // PokemonResponseFormatter func
-func PokemonResponseFormatter(result models.Pokemon, pokemon *models.Pokemon) error {
+func PokemonResponseFormatter(result models.Pokemon, pokemon *models.PokemonResponse) error {
 	//gorm.Model
 	pokemon.PokemonName = result.PokemonName
 	pokemon.PokemonPrefab = result.PokemonPrefab
@@ -41,7 +41,7 @@ func PokemonResponseFormatter(result models.Pokemon, pokemon *models.Pokemon) er
 	// read file into bytes
 	buffer := bufio.NewReader(pokemonPicture)
 	_, err = buffer.Read(bytes)
-	myString := string(bytes)
-	pokemon.PokemonImg=myString
+	//myString := string(bytes)
+	pokemon.PokemonImg=bytes
 	return nil
 }

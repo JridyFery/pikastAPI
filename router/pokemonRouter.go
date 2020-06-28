@@ -16,9 +16,9 @@ type PokemonRouterHandler struct {
 func (r *PokemonRouterHandler) HandleFunctions() {
 	// Route Handlers / Endpoints
 	r.Router.Handle("/api/v1/pokemon", helpers.IsAuthorized(r.Handler.CreatePokemon)).Methods("POST")
-	//r.Router.HandleFunc("/api/v1/pokemon", (r.Handler.CreatePokemon)).Methods("POST")
+	r.Router.HandleFunc("/api/v1/pokemons", (r.Handler.GetPokemons)).Methods("GET")
 	r.Router.Handle("/api/v1/pokemon", helpers.IsAuthorized(r.Handler.GetPokemon)).Methods("GET")
-	r.Router.Handle("/api/v1/pokemons", helpers.IsAuthorized(r.Handler.GetPokemons)).Methods("GET")
+	// r.Router.Handle("/api/v1/pokemons", helpers.IsAuthorized(r.Handler.GetPokemons)).Methods("GET")
 	r.Router.Handle("/api/v1/pokemon", helpers.IsAuthorized(r.Handler.DeletePokemon)).Methods("DELETE")
 	r.Router.Handle("/api/v1/pokemon", helpers.IsAuthorized(r.Handler.UpdatePokemon)).Methods("PUT")
 }

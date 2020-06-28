@@ -23,6 +23,7 @@ type Pokemon struct {
 
 //PokemonResponse Struct
 type PokemonResponse struct {
+	gorm.Model
 	PokemonName       string    `json:"pokemon_name"`
 	PokemonPrefab     string    `json:"pokemon_prefab"`
 	PokemonFBX        string    `json:"pokemon_fbx"`

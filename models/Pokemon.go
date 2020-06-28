@@ -13,6 +13,7 @@ type Pokemon struct {
 	PokemonCost       int       `json:"pokemon_cost"`
 	WithDiamonds      bool      `json:"with_diamonds"`
 	PokemonPower      float64   `json:"pokemon_power"`
+	PokemonMaxPower      float64   `json:"pokemon_maxpower"`
 	PokemonAttacktype string    `json:"pokemon_attack"`
 	PokemonATKSpeed   float64   `json:"pokemon_atkspeed"`
 	PokemonMOVSpeed   float64   `json:"pokemon_movspeed"`
@@ -32,6 +33,7 @@ type PokemonResponse struct {
 	PokemonCost       int       `json:"pokemon_cost"`
 	WithDiamonds      bool      `json:"with_diamonds"`
 	PokemonPower      float64   `json:"pokemon_power"`
+	PokemonMaxPower      float64   `json:"pokemon_maxpower"`
 	PokemonAttacktype string    `json:"pokemon_attack"`
 	PokemonATKSpeed   float64   `json:"pokemon_atkspeed"`
 	PokemonMOVSpeed   float64   `json:"pokemon_movspeed"`

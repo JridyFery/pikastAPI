@@ -2,8 +2,6 @@ package helpers
 
 import (
 	"bufio"
-	"bytes"
-	"os"
 
 	"github.com/JridyFery/pikastAPI/models"
 	"os"

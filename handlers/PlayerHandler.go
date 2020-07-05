@@ -4,17 +4,15 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"encoding/json"
+	"github.com/JridyFery/pikastAPI/helpers"
+	models "github.com/JridyFery/pikastAPI/models"
+	"github.com/JridyFery/pikastAPI/repository"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
-
-	"github.com/JridyFery/pikastAPI/helpers"
-
-	models "github.com/JridyFery/pikastAPI/models"
-	"github.com/JridyFery/pikastAPI/repository"
 	//"crypto/sha1"
 	//"gopkg.in/gomail.v2"
 	//"github.com/sethvargo/go-password/password"
@@ -208,6 +206,7 @@ func (h *PlayerHandler) GetPlayer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := r.URL.Query()["id"]
 	var response models.Response
+
 	id, err := strconv.Atoi(params[0])
 	if err != nil {
 		responseFormatter(500, "INTERNAL SERVER ERROR", err.Error(), &response)
@@ -244,7 +243,7 @@ func (h *PlayerHandler) UpdatePlayerPic(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	//defer file.Close()
-	pictureFile, err3 := ioutil.TempFile("assets/pictures", "pic_*_"+strconv.Itoa(int(dt))+".png")
+	pictureFile, err3 := ioutil.TempFile("assets/pictures/players", "pic_*_"+strconv.Itoa(int(dt))+".png")
 	if err3 != nil {
 		responseFormatter(500, "INTERNAL SERVER ERROR 1", err3.Error(), &response)
 		json.NewEncoder(w).Encode(response)

@@ -1,13 +1,14 @@
 package helpers
 
 import (
+	"bufio"
 	"crypto/sha1"
-
 	models "github.com/JridyFery/pikastAPI/models"
+	"os"
 )
 
 // PlayerResponseFormatter func
-func PlayerResponseFormatter(result models.Player, player *models.PlayerResponse) {
+func PlayerResponseFormatter(result models.Player, player *models.PlayerResponse)  error {
 	player.PlayerID = result.ID
 	player.PlayerName = result.PlayerName
 	player.PlayerEmail = result.PlayerEmail
@@ -17,12 +18,28 @@ func PlayerResponseFormatter(result models.Player, player *models.PlayerResponse
 	player.DateOfBirth.Month = result.BirthMonth
 	player.DateOfBirth.Year = result.BirthYear
 	player.Country = result.Country
-	player.PlayerImg = result.PlayerImg
 	player.PlayerRank = result.PlayerRank
 	player.PlayerCoins = result.PlayerCoins
 	player.PlayerLevelCount = result.PlayerLevelCount
 	player.PlayerLevelProgress = result.PlayerLevelProgress
 
+	playerPicture, err := os.Open("assets/pictures/players/" + result.PlayerImg) // For read access.
+	if err != nil {
+		return err
+	}
+
+	defer playerPicture.Close()
+
+	fileInfo, _ := playerPicture.Stat()
+	var size int64 = fileInfo.Size()
+	bytes := make([]byte, size)
+
+	// read file into bytes
+	buffer := bufio.NewReader(playerPicture)
+	_, err = buffer.Read(bytes)
+	//myString := string(bytes)
+	player.PlayerImg=bytes
+	return nil
 }
 
 // PlayerRequestFormatter func

@@ -13,13 +13,14 @@ import (
 
 // PokemonResponseFormatter func
 func PokemonResponseFormatter(result models.Pokemon, pokemon *models.PokemonResponse) error {
-	//gorm.Model
+	pokemon.Model=result.Model
 	pokemon.PokemonName = result.PokemonName
 	pokemon.PokemonPrefab = result.PokemonPrefab
 	pokemon.PokemonFBX = result.PokemonFBX
 	pokemon.PokemonisPremium = result.PokemonisPremium
 	pokemon.PokemonCost = result.PokemonCost
 	pokemon.WithDiamonds = result.WithDiamonds
+	pokemon.PokemonMaxPower=result.PokemonMaxPower
 	pokemon.PokemonPower = result.PokemonPower
 	pokemon.PokemonAttacktype = result.PokemonAttacktype
 	pokemon.PokemonATKSpeed = result.PokemonATKSpeed

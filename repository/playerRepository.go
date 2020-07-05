@@ -5,8 +5,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/jinzhu/gorm"
 	models "github.com/JridyFery/pikastAPI/models"
+	"github.com/jinzhu/gorm"
 )
 
 // PlayerRepository ...
@@ -31,11 +31,11 @@ type PlayerRepo struct {
 func (r *PlayerRepo) Createplayer(p models.Player) (models.Player, error) {
 	Player := p
 	var player models.Player
-	err := r.Db.Where(map[string]interface{}{"name": p.PlayerName}).Find(&player).Error
+	err := r.Db.Where(map[string]interface{}{"player_name": p.PlayerName}).Find(&player).Error
 	if err == nil {
 		return player, errors.New("ERROR: name already used")
 	}
-	err = r.Db.Where(map[string]interface{}{"email": p.PlayerEmail}).Find(&player).Error
+	err = r.Db.Where(map[string]interface{}{"player_email": p.PlayerEmail}).Find(&player).Error
 	if err == nil {
 		return player, errors.New("ERROR: email is already used")
 	}

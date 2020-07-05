@@ -43,6 +43,7 @@ func (h *PokemonHandler) GetPokemon(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := r.URL.Query()["id"]
 	var response models.Response
+	var PokemonResponse models.PokemonResponse
 	id, err := strconv.Atoi(params[0])
 	if err != nil {
 		responseFormatter(500, "INTERNAL SERVER ERROR", err.Error(), &response)
@@ -55,9 +56,11 @@ func (h *PokemonHandler) GetPokemon(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-
-	responseFormatter(200, "OK", result, &response)
+	helpers.PokemonResponseFormatter(result,&PokemonResponse)
+	responseFormatter(200, "OK", PokemonResponse, &response)
 	json.NewEncoder(w).Encode(response)
+
+
 }
 
 //DeletePokemon ...

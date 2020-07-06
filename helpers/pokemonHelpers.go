@@ -2,12 +2,9 @@ package helpers
 
 import (
 	"bufio"
-<<<<<<< HEAD
+
 	//"bytes"
 	"os"
-=======
->>>>>>> 114014fb23a130de2be1f541bd6f5b86b431c935
-
 	"github.com/JridyFery/pikastAPI/models"
 //	"github.com/jinzhu/gorm"
 	//"encoding/hex"

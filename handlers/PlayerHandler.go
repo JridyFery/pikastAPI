@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"encoding/json"
-	"github.com/JridyFery/pikastAPI/helpers"
-	models "github.com/JridyFery/pikastAPI/models"
-	"github.com/JridyFery/pikastAPI/repository"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/JridyFery/pikastAPI/helpers"
+	models "github.com/JridyFery/pikastAPI/models"
+	"github.com/JridyFery/pikastAPI/repository"
 	//"crypto/sha1"
 	//"gopkg.in/gomail.v2"
 	//"github.com/sethvargo/go-password/password"
@@ -219,9 +220,9 @@ func (h *PlayerHandler) GetPlayer(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	var player models.PlayerResponse
-	helpers.PlayerResponseFormatter(result, &player)
-	responseFormatter(200, "OK", player, &response)
+	var playerResponse models.PlayerResponse
+	helpers.PlayerResponseFormatter(result, &playerResponse)
+	responseFormatter(200, "OK", playerResponse, &response)
 	json.NewEncoder(w).Encode(response)
 }
 

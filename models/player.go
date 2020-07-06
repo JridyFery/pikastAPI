@@ -64,7 +64,7 @@ type PlayerResponse struct {
 	Admin               bool   `json:"admin"`
 	DateOfBirth         Date   `json:"dateofbirth"`
 	Country             string `json:"countryOfResidence"`
-	PlayerImg           []byte `json:"player_img"`
+	PlayerImg            []byte `json:"player_img"`
 	PlayerCoins         int    `json:"player_coins"`
 	PlayerRank          string `json:"player_rank"`
 	PlayerLevelCount    int    `json:"player_levelCount"`

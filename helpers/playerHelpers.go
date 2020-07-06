@@ -3,12 +3,13 @@ package helpers
 import (
 	"bufio"
 	"crypto/sha1"
-	models "github.com/JridyFery/pikastAPI/models"
 	"os"
+
+	models "github.com/JridyFery/pikastAPI/models"
 )
 
 // PlayerResponseFormatter func
-func PlayerResponseFormatter(result models.Player, player *models.PlayerResponse)  error {
+func PlayerResponseFormatter(result models.Player, player *models.PlayerResponse) error {
 	player.PlayerID = result.ID
 	player.PlayerName = result.PlayerName
 	player.PlayerEmail = result.PlayerEmail
@@ -38,7 +39,7 @@ func PlayerResponseFormatter(result models.Player, player *models.PlayerResponse
 	buffer := bufio.NewReader(playerPicture)
 	_, err = buffer.Read(bytes)
 	//myString := string(bytes)
-	player.PlayerImg=bytes
+	player.PlayerImg = bytes
 	return nil
 }
 

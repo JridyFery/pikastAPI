@@ -1,9 +1,9 @@
 package router
 
 import (
-	"github.com/gorilla/mux"
 	handlers "github.com/JridyFery/pikastAPI/handlers"
 	"github.com/JridyFery/pikastAPI/helpers"
+	"github.com/gorilla/mux"
 )
 
 // PlayerRouterHandler ...
@@ -18,6 +18,7 @@ func (r *PlayerRouterHandler) HandleFunctions() {
 	r.Router.HandleFunc("/api/v1/register", r.Handler.CreatePlayer).Methods("POST")
 	r.Router.HandleFunc("/api/v1/login", r.Handler.Login).Methods("GET")
 	r.Router.Handle("/api/v1/player", helpers.IsAuthorized(r.Handler.GetPlayer)).Methods("GET")
+	r.Router.Handle("/api/v1/playerpic", helpers.IsAuthorized(r.Handler.GetPlayerPic)).Methods("GET")
 	r.Router.Handle("/api/v1/players", helpers.IsAuthorized(r.Handler.GetPlayers)).Methods("GET")
 	r.Router.Handle("/api/v1/playerpokemon", helpers.IsAuthorized(r.Handler.AddPokemonPlayer)).Methods("POST")
 	r.Router.Handle("/api/v1/playerpokemons", helpers.IsAuthorized(r.Handler.GetPlayerPokemons)).Methods("GET")

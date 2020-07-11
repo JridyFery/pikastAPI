@@ -1,11 +1,8 @@
 package helpers
 
 import (
-	"bufio"
 	"crypto/sha1"
-	"os"
-
-	models "github.com/JridyFery/pikastAPI/models"
+	"github.com/JridyFery/pikastAPI/models"
 )
 
 // PlayerResponseFormatter func
@@ -23,23 +20,7 @@ func PlayerResponseFormatter(result models.Player, player *models.PlayerResponse
 	player.PlayerCoins = result.PlayerCoins
 	player.PlayerLevelCount = result.PlayerLevelCount
 	player.PlayerLevelProgress = result.PlayerLevelProgress
-
-	playerPicture, err := os.Open("assets/pictures/players/" + result.PlayerImg) // For read access.
-	if err != nil {
-		return err
-	}
-
-	defer playerPicture.Close()
-
-	fileInfo, _ := playerPicture.Stat()
-	var size int64 = fileInfo.Size()
-	bytes := make([]byte, size)
-
-	// read file into bytes
-	buffer := bufio.NewReader(playerPicture)
-	_, err = buffer.Read(bytes)
-	//myString := string(bytes)
-	player.PlayerImg = bytes
+	player.PlayerImg = result.PlayerImg
 	return nil
 }
 

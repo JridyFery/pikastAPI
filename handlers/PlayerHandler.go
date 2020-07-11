@@ -226,6 +226,23 @@ func (h *PlayerHandler) GetPlayer(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+func (h *PlayerHandler) GetPlayerPic(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := r.URL.Query()["player_pic"]
+	var response models.Response
+
+	file, err := os.Open("assets/pictures/" + params[0])
+	if err != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR", err.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	buf := bytes.NewBuffer(nil)
+	io.Copy(buf, file)
+	responseFormatter(200, "OK", buf.Bytes(), &response)
+	json.NewEncoder(w).Encode(response)
+}
+
 //UpdatePlayerPic func
 func (h *PlayerHandler) UpdatePlayerPic(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json ")

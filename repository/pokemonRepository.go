@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/jinzhu/gorm"
 	models "github.com/JridyFery/pikastAPI/models"
+	"github.com/jinzhu/gorm"
 )
 
 //PokemonRepository ...
@@ -53,6 +53,9 @@ func (r *PokemonRepo) GetPokemons(pokemonType string, offset int, limit int) ([]
 	} else if strings.ToUpper(pokemonType) == "FREE" {
 		err = r.Db.Where("pokemonis_premium= ?", false).Offset(offset).Limit(limit).Find(&Pokemons).Error
 		r.Db.Model(&Pokemon).Where("pokemonis_premium = ?", false).Count(&count)
+	} else if strings.ToUpper(pokemonType) == "ALL" {
+		err = r.Db.Offset(offset).Limit(limit).Find(&Pokemons).Error
+		r.Db.Model(&Pokemon).Count(&count)
 	}
 	return Pokemons, count, err
 }

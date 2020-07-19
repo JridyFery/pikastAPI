@@ -90,13 +90,13 @@ func (r *PlayerRepo) GetPlayerBy(keys []string, values []interface{}) (models.Pl
 //UpdatePlayer ...
 func (r *PlayerRepo) UpdatePlayer(m map[string]interface{}, id uint) error {
 	player := models.Player{}
-	err := r.Db.Where("name = ? AND id != ?", m["name"], id).Find(&player).Error
+	err := r.Db.Where("player_name = ? AND id != ?", m["player_name"], id).Find(&player).Error
 	if err == nil {
 		return errors.New("ERROR: name already used")
 	}
-	err = r.Db.Where("email = ? AND id != ?", m["email"], id).Find(&player).Error
+	err = r.Db.Where("player_email = ? AND id != ?", m["player_email"], id).Find(&player).Error
 	if err == nil {
-		return errors.New("ERROR: MAIL ALREADY USED")
+		return errors.New("ERROR: mail already used")
 	}
 	err = r.Db.First(&player, id).Error
 	if err != nil {

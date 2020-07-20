@@ -15,6 +15,7 @@ type PokemonRepository interface {
 	GetPokemons(pokemonType string, offset int, limit int) ([]models.Pokemon, int, error)
 	UpdatePokemon(m map[string]interface{}, id uint) error
 	DeletePokemon(id uint) error
+	UpdatePokemonPic(img string, id uint) error
 }
 
 //PokemonRepo ...
@@ -87,4 +88,18 @@ func (r *PokemonRepo) UpdatePokemon(m map[string]interface{}, id uint) error {
 	pokemon.ID = id
 	err1 := r.Db.Model(&pokemon).Updates(m).Error
 	return err1
+}
+
+//UpdatePlayerPic function
+func (r *PokemonRepo) UpdatePokemonPic(img string, id uint) error {
+	Pokemon := models.Pokemon{}
+	m := make(map[string]interface{})
+	err := r.Db.First(&Pokemon, id).Error
+	if err != nil {
+		return err
+	}
+	m["pokemon_img"] = img
+	Pokemon.ID = id
+	err = r.Db.Model(&Pokemon).Update(m).Error
+	return err
 }

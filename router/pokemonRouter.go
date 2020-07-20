@@ -21,4 +21,5 @@ func (r *PokemonRouterHandler) HandleFunctions() {
 	r.Router.Handle("/api/v1/pokemons", helpers.IsAuthorized(r.Handler.GetPokemons)).Methods("GET")
 	r.Router.Handle("/api/v1/pokemon", helpers.IsAuthorized(r.Handler.DeletePokemon)).Methods("DELETE")
 	r.Router.Handle("/api/v1/pokemon", helpers.IsAuthorized(r.Handler.UpdatePokemon)).Methods("PUT")
+	r.Router.HandleFunc("/api/v1/updatepokemonpic", r.Handler.UpdatePokemonPic).Methods("POST")
 }

@@ -1,9 +1,11 @@
 package handlers
 
 import (
-	"net/http"
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/JridyFery/pikastAPI/helpers"
 	models "github.com/JridyFery/pikastAPI/models"
@@ -56,10 +58,9 @@ func (h *PokemonHandler) GetPokemon(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	helpers.PokemonResponseFormatter(result,&PokemonResponse)
+	helpers.PokemonResponseFormatter(result, &PokemonResponse)
 	responseFormatter(200, "OK", PokemonResponse, &response)
 	json.NewEncoder(w).Encode(response)
-
 
 }
 
@@ -118,8 +119,8 @@ func (h *PokemonHandler) GetPokemons(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	for _, pok := range result {
-		helpers.PokemonResponseFormatter(pok,&pokemonResponse)
-		pokemonResponses = append(pokemonResponses,pokemonResponse)
+		helpers.PokemonResponseFormatter(pok, &pokemonResponse)
+		pokemonResponses = append(pokemonResponses, pokemonResponse)
 	}
 	responseFormatter(200, "OK", pokemonResponses, &response)
 	responseWithCount.Response = response
@@ -168,5 +169,43 @@ func (h *PokemonHandler) UpdatePokemon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responseFormatter(200, "OK", "PLAYER UPDATED", &response)
+	json.NewEncoder(w).Encode(response)
+}
+
+//UpdatePokemonPic func
+func (h *PokemonHandler) UpdatePokemonPic(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json ")
+	var response models.Response
+	var requestImage models.PokemonRequestImage
+	dt := time.Now().UnixNano()
+	err := json.NewDecoder(r.Body).Decode(&requestImage)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if err != nil {
+		responseFormatter(400, "BAD REQUEST", err.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	//defer file.Close()
+	pictureFile, err3 := ioutil.TempFile("assets/pictures/pokemons", "pic_*_"+strconv.Itoa(int(dt))+".png")
+	if err3 != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR 1", err3.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	defer pictureFile.Close()
+
+	pictureFile.Write(requestImage.PokemonImg)
+	pictureName := pictureFile.Name()[25:]
+	err3 = h.Repo.UpdatePokemonPic(pictureName, uint(requestImage.PokemonID))
+	if err3 != nil {
+		responseFormatter(500, "INTERNAL SERVER ERROR 4", err3.Error(), &response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	responseFormatter(200, "OK", "PICTURE UPDATED", &response)
 	json.NewEncoder(w).Encode(response)
 }

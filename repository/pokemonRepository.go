@@ -77,11 +77,11 @@ func (r *PokemonRepo) DeletePokemon(id uint) error {
 //UpdatePokemon ...
 func (r *PokemonRepo) UpdatePokemon(m map[string]interface{}, id uint) error {
 	pokemon := models.Pokemon{}
-	err := r.Db.Where("pokemon_name = ?", m["pokemon_name"]).Find(&pokemon).Error
-	if err == nil {
-		return errors.New("ERROR: name is already in use")
-	}
-	err = r.Db.First(&pokemon, id).Error
+	//err := r.Db.Where("pokemon_name = ?", m["pokemon_name"]).Find(&pokemon).Error
+	//if err == nil {
+	//	return errors.New("ERROR: name is already in use")
+	//}
+	err := r.Db.First(&pokemon, id).Error
 	if err != nil {
 		return errors.New("ERROR: ID does not exist")
 	}
